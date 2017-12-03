@@ -10,12 +10,8 @@
 
 @implementation UIImageView (VIUtil)
 
-- (CGSize)contentSizeWithType:(VIPhotoImageType)type {
-    return [self.image sizeThatFits:self.bounds.size type:type];
-}
-
-- (BOOL)isVerticaSlidingDirectionWithType:(VIPhotoImageType)type {
-    return [self.image isVerticaSlidingDirectionImageWithType:type size:self.bounds.size];
+- (CGSize)contentSizeWithType:(VIPhotoImageType)type block:(void(^)(BOOL))block{
+    return [self.image sizeThatFits:self.bounds.size type:type block:block];
 }
 
 

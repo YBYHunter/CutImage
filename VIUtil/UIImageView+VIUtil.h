@@ -11,12 +11,7 @@
 
 @interface UIImageView (VIUtil)
 
-- (CGSize)contentSizeWithType:(VIPhotoImageType)type;
-
-/*
- * == yes is Vertica
- */
-- (BOOL)isVerticaSlidingDirectionWithType:(VIPhotoImageType)type;
+- (CGSize)contentSizeWithType:(VIPhotoImageType)type block:(void(^)(BOOL))block;
 
 
 

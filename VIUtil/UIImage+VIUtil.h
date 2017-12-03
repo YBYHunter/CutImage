@@ -25,9 +25,8 @@ typedef NS_ENUM(NSInteger, VIPhotoImageType) {
 
 @interface UIImage (VIUtil)
 
-- (CGSize)sizeThatFits:(CGSize)size type:(VIPhotoImageType)type;
+- (CGSize)sizeThatFits:(CGSize)size type:(VIPhotoImageType)type block:(void(^)(BOOL))block;
 
-- (BOOL)isVerticaSlidingDirectionImageWithType:(VIPhotoImageType)type size:(CGSize)size;
 
 
 

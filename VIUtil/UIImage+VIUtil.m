@@ -10,7 +10,7 @@
 
 @implementation UIImage (VIUtil)
 
-- (CGSize)sizeThatFits:(CGSize)size type:(VIPhotoImageType)type {
+- (CGSize)sizeThatFits:(CGSize)size type:(VIPhotoImageType)type block:(void(^)(BOOL))block {
     CGSize imageSize = CGSizeMake(self.size.width / self.scale,
                                   self.size.height / self.scale);
     
@@ -21,51 +21,40 @@
         if (widthRatio > heightRatio) {
             //左右滑动图
             imageSize = CGSizeMake(imageSize.width / widthRatio, imageSize.height / widthRatio);
+            if (block) {
+                block(NO);
+            }
         } else {
             //上下滑动
             imageSize = CGSizeMake(imageSize.width / heightRatio, imageSize.height / heightRatio);
+            if (block) {
+                block(YES);
+            }
         }
     }
     else {
         if (widthRatio > heightRatio) {
             //左右滑动图
             imageSize = CGSizeMake(imageSize.width / heightRatio, imageSize.height / heightRatio);
+            if (block) {
+                block(NO);
+            }
         } else {
             //上下滑动
             imageSize = CGSizeMake(imageSize.width / widthRatio, imageSize.height / widthRatio);
+            if (block) {
+                block(YES);
+            }
         }
     }
     
     return imageSize;
 }
 
-- (BOOL)isVerticaSlidingDirectionImageWithType:(VIPhotoImageType)type size:(CGSize)size {
-    CGSize imageSize = CGSizeMake(self.size.width / self.scale,
-                                  self.size.height / self.scale);
-    
-    CGFloat widthRatio = imageSize.width / size.width;
-    CGFloat heightRatio = imageSize.height / size.height;
-    
-    BOOL isVertica = NO;
-    if (type == VIPhotoImageTypeAspectFit) {
-        if (widthRatio > heightRatio) {
-            //左右滑动图
-            isVertica = YES;
-        } else {
-            //上下滑动
-            isVertica = NO;
-        }
-    }
-    else {
-        if (widthRatio > heightRatio) {
-            //左右滑动图
-            isVertica = NO;
-        } else {
-            //上下滑动
-            isVertica = YES;
-        }
-    }
-    return isVertica;
-}
+
+//- (void)setIsVerticaSliding:(BOOL)isVerticaSliding {
+//    _isVerticaSliding = isVerticaSliding;
+//}
+
 
 @end

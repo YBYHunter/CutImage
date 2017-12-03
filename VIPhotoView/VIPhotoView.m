@@ -15,11 +15,11 @@
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) UITapGestureRecognizer *doubleTapGestureRecognizer;
 
-@property (nonatomic, assign) BOOL rotating;
 @property (nonatomic, assign) CGSize minSize;
 
 @property (nonatomic, assign) CGFloat currentScale;
 @property (nonatomic, assign) VIPhotoImageType currentType;
+@property (nonatomic, assign) BOOL currentIsVertica;
 
 @end
 
@@ -32,8 +32,6 @@
     if (self) {
         self.delegate = self;
         self.bouncesZoom = YES;
-        _currentScale = 1;
-        _image = image;
         _currentType = type;
         
         [self.containerView addGestureRecognizer:self.doubleTapGestureRecognizer];
@@ -43,27 +41,7 @@
         [self addSubview:self.containerView];
         [self.containerView addSubview:self.imageView];
         
-        self.imageView.image = image;
-        self.imageView.frame = self.containerView.bounds;
-        
-        // Fit container view's size to image size
-        CGSize imageSize = [self.imageView contentSizeWithType:type];
-        self.containerView.frame = CGRectMake(0, 0, imageSize.width, imageSize.height);
-        self.imageView.bounds = CGRectMake(0, 0, imageSize.width, imageSize.height);
-        self.imageView.center = CGPointMake(imageSize.width / 2, imageSize.height / 2);
-        
-        self.contentSize = imageSize;
-        self.minSize = imageSize;
-        
-        //更新cutRext值
-        [self updateSubImageRectWith:self];
-        
-        //设置最小最大zoom
-        [self setMaxMinZoomScale];
-        
-        // Center containerView by set insets
-        [self centerContent];
-        [self centerPositionWithAnimation:NO];
+        [self updataDataWithImage:image];
     }
     
     return self;
@@ -72,24 +50,6 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
-    if (self.rotating) {
-        self.rotating = NO;
-        
-        // update container view frame
-        CGSize containerSize = self.containerView.frame.size;
-        BOOL containerSmallerThanSelf = (containerSize.width < CGRectGetWidth(self.bounds)) && (containerSize.height < CGRectGetHeight(self.bounds));
-        
-        CGSize imageSize = [self.imageView.image sizeThatFits:self.bounds.size type:_currentType];
-        CGFloat minZoomScale = imageSize.width / self.minSize.width;
-        self.minimumZoomScale = minZoomScale;
-        if (containerSmallerThanSelf || self.zoomScale == self.minimumZoomScale) { // 宽度或高度 都小于 self 的宽度和高度
-            self.zoomScale = minZoomScale;
-        }
-        
-        // Center container view
-        [self centerContent];
-    }
 }
 
 
@@ -98,7 +58,8 @@
 - (void)centerPositionWithAnimation:(BOOL)isAnimation {
     CGFloat centerOffsetX = 0;
     CGFloat centerOffsetY = 0;
-    if ([self.imageView isVerticaSlidingDirectionWithType:_currentType] == NO) {
+    
+    if (self.currentIsVertica == NO) {
         //左右
         centerOffsetX = (self.contentSize.width - self.frame.size.width)/2;
         centerOffsetY = 0;
@@ -111,6 +72,39 @@
     
     //更新裁剪区域
     [self updateSubImageRectWith:self];
+}
+
+- (void)updataDataWithImage:(UIImage *)image {
+    _image = image;
+    _currentScale = 1;
+    
+    self.imageView.image = image;
+    self.containerView.frame = self.bounds;
+    self.imageView.frame = self.containerView.bounds;
+    
+    __weak __typeof(self)weakSelf = self;
+    CGSize imageSize = [self.imageView contentSizeWithType:_currentType block:^(BOOL isVertica) {
+        weakSelf.currentIsVertica = isVertica;
+    }];
+    
+    self.containerView.frame = CGRectMake(0, 0, imageSize.width, imageSize.height);
+    self.imageView.bounds = CGRectMake(0, 0, imageSize.width, imageSize.height);
+    self.imageView.center = CGPointMake(imageSize.width / 2, imageSize.height / 2);
+    
+    self.contentSize = imageSize;
+    self.minSize = imageSize;
+    
+    //更新cutRext值
+    [self updateSubImageRectWith:self];
+    
+    //设置最小最大zoom
+    [self setMaxMinZoomScale];
+    
+    // Center containerView by set insets
+    [self centerContent];
+    [self centerPositionWithAnimation:NO];
+    
+    [self setZoomScale:self.minimumZoomScale animated:NO];
 }
 
 #pragma mark - Setup
@@ -191,9 +185,8 @@
 
 #pragma mark - Notification
 
-- (void)orientationChanged:(NSNotification *)notification
-{
-    self.rotating = YES;
+- (void)orientationChanged:(NSNotification *)notification {
+    
 }
 
 #pragma mark - Helper
@@ -201,8 +194,10 @@
 - (CGSize)getCutSize {
     CGFloat cutWidth = 0;
     CGFloat cutHeight = 0;
-    
-    if ([self.imageView isVerticaSlidingDirectionWithType:_currentType] == NO) {
+    if (_image == nil) {
+        NSLog(@"getCutSize - image == nil");
+    }
+    if (self.currentIsVertica == NO) {
         //左右
         cutHeight = _image.size.height;
         cutWidth = cutHeight * self.frame.size.width / self.frame.size.height;
@@ -217,7 +212,7 @@
 
 - (CGFloat)getMaxScale {
     CGSize imageSize = self.imageView.image.size;
-    CGSize imagePresentationSize = [self.imageView contentSizeWithType:_currentType];
+    CGSize imagePresentationSize = [self.imageView contentSizeWithType:_currentType block:nil];
     CGFloat maxScale = MAX(imageSize.height / imagePresentationSize.height, imageSize.width / imagePresentationSize.width);
     return MAX(1.5, maxScale);
 }
