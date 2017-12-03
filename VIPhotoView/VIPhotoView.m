@@ -78,6 +78,8 @@
     _image = image;
     _currentScale = 1;
     
+    [self setZoomScale:self.minimumZoomScale animated:NO];
+    
     self.imageView.image = image;
     self.containerView.frame = self.bounds;
     self.imageView.frame = self.containerView.bounds;
@@ -101,10 +103,13 @@
     [self setMaxMinZoomScale];
     
     // Center containerView by set insets
-    [self centerContent];
-    [self centerPositionWithAnimation:NO];
-    
-    [self setZoomScale:self.minimumZoomScale animated:NO];
+    if (_currentType == VIPhotoImageTypeAspectFit) {
+        [self centerContent];
+    }
+    else {
+        [self centerPositionWithAnimation:NO];
+    }
+
 }
 
 #pragma mark - Setup
