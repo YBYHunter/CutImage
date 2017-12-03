@@ -8,53 +8,6 @@
 
 #import "VIPhotoView.h"
 
-@interface UIImage (VIUtil)
-
-- (CGSize)sizeThatFits:(CGSize)size;
-
-@end
-
-@implementation UIImage (VIUtil)
-
-- (CGSize)sizeThatFits:(CGSize)size
-{
-    CGSize imageSize = CGSizeMake(self.size.width / self.scale,
-                                  self.size.height / self.scale);
-    
-    CGFloat widthRatio = imageSize.width / size.width;
-    CGFloat heightRatio = imageSize.height / size.height;
-    
-    if (widthRatio > heightRatio) {
-        //左右滑动图
-        imageSize = CGSizeMake(imageSize.width / heightRatio, imageSize.height / heightRatio);
-
-        
-    } else {
-        //上下滑动
-        imageSize = CGSizeMake(imageSize.width / widthRatio, imageSize.height / widthRatio);
-    }
-
-    
-    return imageSize;
-}
-
-@end
-
-@interface UIImageView (VIUtil)
-
-- (CGSize)contentSize;
-
-@end
-
-@implementation UIImageView (VIUtil)
-
-- (CGSize)contentSize
-{
-    return [self.image sizeThatFits:self.bounds.size];
-}
-
-@end
-
 @interface VIPhotoView () <UIScrollViewDelegate>
 
 @property (nonatomic, strong) UIView *containerView;
@@ -66,13 +19,14 @@
 @property (nonatomic, assign) CGSize minSize;
 
 @property (nonatomic, assign) CGFloat currentScale;
+@property (nonatomic, assign) VIPhotoImageType currentType;
 
 @end
 
 @implementation VIPhotoView
 
 
-- (instancetype)initWithFrame:(CGRect)frame andImage:(UIImage *)image
+- (instancetype)initWithFrame:(CGRect)frame andImage:(UIImage *)image type:(VIPhotoImageType)type
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -80,17 +34,20 @@
         self.bouncesZoom = YES;
         _currentScale = 1;
         _image = image;
+        _currentType = type;
         
-        // Add container view
+        [self.containerView addGestureRecognizer:self.doubleTapGestureRecognizer];
+        [self setupRotationNotification];
+        
+        // Add view
         [self addSubview:self.containerView];
-        
-        // Add image view
-        self.imageView.image = image;
-        self.imageView.frame = self.containerView.bounds;
         [self.containerView addSubview:self.imageView];
         
+        self.imageView.image = image;
+        self.imageView.frame = self.containerView.bounds;
+        
         // Fit container view's size to image size
-        CGSize imageSize = self.imageView.contentSize;
+        CGSize imageSize = [self.imageView contentSizeWithType:type];
         self.containerView.frame = CGRectMake(0, 0, imageSize.width, imageSize.height);
         self.imageView.bounds = CGRectMake(0, 0, imageSize.width, imageSize.height);
         self.imageView.center = CGPointMake(imageSize.width / 2, imageSize.height / 2);
@@ -98,6 +55,7 @@
         self.contentSize = imageSize;
         self.minSize = imageSize;
         
+        //更新cutRext值
         [self updateSubImageRectWith:self];
         
         //设置最小最大zoom
@@ -105,9 +63,7 @@
         
         // Center containerView by set insets
         [self centerContent];
-        
-        [self.containerView addGestureRecognizer:self.doubleTapGestureRecognizer];
-        [self setupRotationNotification];
+        [self centerPositionWithAnimation:NO];
     }
     
     return self;
@@ -124,7 +80,7 @@
         CGSize containerSize = self.containerView.frame.size;
         BOOL containerSmallerThanSelf = (containerSize.width < CGRectGetWidth(self.bounds)) && (containerSize.height < CGRectGetHeight(self.bounds));
         
-        CGSize imageSize = [self.imageView.image sizeThatFits:self.bounds.size];
+        CGSize imageSize = [self.imageView.image sizeThatFits:self.bounds.size type:_currentType];
         CGFloat minZoomScale = imageSize.width / self.minSize.width;
         self.minimumZoomScale = minZoomScale;
         if (containerSmallerThanSelf || self.zoomScale == self.minimumZoomScale) { // 宽度或高度 都小于 self 的宽度和高度
@@ -140,12 +96,9 @@
 #pragma mark - public method
 
 - (void)centerPositionWithAnimation:(BOOL)isAnimation {
-    CGFloat widthRatio = _image.size.width / self.frame.size.width;
-    CGFloat heightRatio = _image.size.height / self.frame.size.height;
-    
     CGFloat centerOffsetX = 0;
     CGFloat centerOffsetY = 0;
-    if (widthRatio > heightRatio) {
+    if ([self.imageView isVerticaSlidingDirectionWithType:_currentType] == NO) {
         //左右
         centerOffsetX = (self.contentSize.width - self.frame.size.width)/2;
         centerOffsetY = 0;
@@ -249,10 +202,7 @@
     CGFloat cutWidth = 0;
     CGFloat cutHeight = 0;
     
-    CGFloat widthRatio = _image.size.width / self.frame.size.width;
-    CGFloat heightRatio = _image.size.height / self.frame.size.height;
-    
-    if (widthRatio > heightRatio) {
+    if ([self.imageView isVerticaSlidingDirectionWithType:_currentType] == NO) {
         //左右
         cutHeight = _image.size.height;
         cutWidth = cutHeight * self.frame.size.width / self.frame.size.height;
@@ -267,7 +217,7 @@
 
 - (CGFloat)getMaxScale {
     CGSize imageSize = self.imageView.image.size;
-    CGSize imagePresentationSize = self.imageView.contentSize;
+    CGSize imagePresentationSize = [self.imageView contentSizeWithType:_currentType];
     CGFloat maxScale = MAX(imageSize.height / imagePresentationSize.height, imageSize.width / imagePresentationSize.width);
     return MAX(1.5, maxScale);
 }

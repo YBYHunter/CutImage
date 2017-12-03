@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIImageView+VIUtil.h"
 
 @interface VIPhotoView : UIScrollView
 
@@ -14,13 +15,20 @@
 
 @property (nonatomic, strong, readonly) UIImage *image;
 
-//裁剪区域
+
+/*
+ * 裁剪区域
+ */
 @property (nonatomic, assign, readonly) CGRect cutRect;
 
-//初始化
-- (instancetype)initWithFrame:(CGRect)frame andImage:(UIImage *)image;
+/*
+ * 初始化
+ */
+- (instancetype)initWithFrame:(CGRect)frame andImage:(UIImage *)image type:(VIPhotoImageType)type;
 
-//滑动到图片中心位置
+/*
+ * 滑动到图片中心位置
+ */
 - (void)centerPositionWithAnimation:(BOOL)isAnimation;
 
 

@@ -21,6 +21,8 @@
 		9ABBA4D61FD228E200DF77DA /* IMG_0070.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 9ABBA4D51FD228E200DF77DA /* IMG_0070.JPG */; };
 		9ABBA4D81FD2295200DF77DA /* IMG_0071.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 9ABBA4D71FD2295200DF77DA /* IMG_0071.JPG */; };
 		9ABBA4DA1FD374FF00DF77DA /* 123123.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9ABBA4D91FD374FF00DF77DA /* 123123.jpg */; };
+		9ABBA4DD1FD3938B00DF77DA /* UIImage+VIUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBA4DC1FD3938B00DF77DA /* UIImage+VIUtil.m */; };
+		9ABBA4E01FD3941600DF77DA /* UIImageView+VIUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBA4DF1FD3941600DF77DA /* UIImageView+VIUtil.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,10 @@
 		9ABBA4D51FD228E200DF77DA /* IMG_0070.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IMG_0070.JPG; sourceTree = "<group>"; };
 		9ABBA4D71FD2295200DF77DA /* IMG_0071.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IMG_0071.JPG; sourceTree = "<group>"; };
 		9ABBA4D91FD374FF00DF77DA /* 123123.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 123123.jpg; sourceTree = "<group>"; };
+		9ABBA4DB1FD3938B00DF77DA /* UIImage+VIUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+VIUtil.h"; sourceTree = "<group>"; };
+		9ABBA4DC1FD3938B00DF77DA /* UIImage+VIUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+VIUtil.m"; sourceTree = "<group>"; };
+		9ABBA4DE1FD3941600DF77DA /* UIImageView+VIUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImageView+VIUtil.h"; sourceTree = "<group>"; };
+		9ABBA4DF1FD3941600DF77DA /* UIImageView+VIUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+VIUtil.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +152,10 @@
 			children = (
 				5F9676031EE0211F002A98F8 /* VIPhotoView.h */,
 				5F9676041EE0211F002A98F8 /* VIPhotoView.m */,
+				9ABBA4DB1FD3938B00DF77DA /* UIImage+VIUtil.h */,
+				9ABBA4DC1FD3938B00DF77DA /* UIImage+VIUtil.m */,
+				9ABBA4DE1FD3941600DF77DA /* UIImageView+VIUtil.h */,
+				9ABBA4DF1FD3941600DF77DA /* UIImageView+VIUtil.m */,
 			);
 			path = VIPhotoView;
 			sourceTree = SOURCE_ROOT;
@@ -259,8 +269,10 @@
 			files = (
 				5F9676051EE0211F002A98F8 /* VIPhotoView.m in Sources */,
 				5F856E0D1A5D791C0011786E /* ViewController.m in Sources */,
+				9ABBA4DD1FD3938B00DF77DA /* UIImage+VIUtil.m in Sources */,
 				5F856E0A1A5D791C0011786E /* AppDelegate.m in Sources */,
 				5F856E071A5D791C0011786E /* main.m in Sources */,
+				9ABBA4E01FD3941600DF77DA /* UIImageView+VIUtil.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
