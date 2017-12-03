@@ -150,14 +150,22 @@
 		5F9676021EE0211F002A98F8 /* VIPhotoView */ = {
 			isa = PBXGroup;
 			children = (
+				9ABBA4E11FD3999600DF77DA /* VIUtil */,
 				5F9676031EE0211F002A98F8 /* VIPhotoView.h */,
 				5F9676041EE0211F002A98F8 /* VIPhotoView.m */,
+			);
+			path = VIPhotoView;
+			sourceTree = SOURCE_ROOT;
+		};
+		9ABBA4E11FD3999600DF77DA /* VIUtil */ = {
+			isa = PBXGroup;
+			children = (
 				9ABBA4DB1FD3938B00DF77DA /* UIImage+VIUtil.h */,
 				9ABBA4DC1FD3938B00DF77DA /* UIImage+VIUtil.m */,
 				9ABBA4DE1FD3941600DF77DA /* UIImageView+VIUtil.h */,
 				9ABBA4DF1FD3941600DF77DA /* UIImageView+VIUtil.m */,
 			);
-			path = VIPhotoView;
+			path = VIUtil;
 			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */

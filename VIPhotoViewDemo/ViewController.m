@@ -23,7 +23,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     UIImage *image = [UIImage imageNamed:@"timg.jpeg"];
-    VIPhotoView *photoView = [[VIPhotoView alloc] initWithFrame:CGRectMake(10, 20, self.view.frame.size.width - 20, self.view.frame.size.width - 220) andImage:image type:VIPhotoImageTypeAspectFill];
+    VIPhotoView *photoView = [[VIPhotoView alloc] initWithFrame:CGRectMake(10, 20, self.view.frame.size.width - 20, self.view.frame.size.width - 20) andImage:image type:VIPhotoImageTypeAspectFill];
     photoView.backgroundColor = [UIColor redColor];
     photoView.autoresizingMask = (1 << 6) -1;
 
